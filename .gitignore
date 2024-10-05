@@ -1,0 +1,7 @@
+tmp
+.DS_STORE
+.vscode
+.idea
+mocks
+ent
+bin
