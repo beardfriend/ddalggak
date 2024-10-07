@@ -6,7 +6,7 @@ In long term, you'll have to create many repeated code.
 It will help you from boring stuff.
 
 [![Video Label](http://img.youtube.com/vi/9A8xONwJoFE/0.jpg)](https://youtu.be/9A8xONwJoFE)
-
+Click image, watch sample in youtube
 # How to Generate Code
 
 ```bash
