@@ -5,6 +5,8 @@ This Boilerplate is designed to start easier.
 In long term, you'll have to create many repeated code.
 It will help you from boring stuff.
 
+[!sample](https://youtu.be/9A8xONwJoFE)
+
 # How to Generate Code
 
 ```bash
