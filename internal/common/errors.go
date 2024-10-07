@@ -48,3 +48,8 @@ func ParseError(c *fiber.Ctx, err error) error {
 
 	return c.Status(http.StatusInternalServerError).JSON(Response{Message: "Internal Server Error"})
 }
+
+var (
+	ErrDatabaseError = fmt.Errorf("database error")
+	ErrNotfound      = fmt.Errorf("data not found")
+)

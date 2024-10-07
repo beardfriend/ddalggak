@@ -1,0 +1,15 @@
+with-expecter: true
+print: true
+packages:
+  github.com/beardfriend/ddalggak/pkg:
+    config:
+      with-expecter: True
+      recursive: true
+      all: true
+      dir: "pkg/mocks/{{.PackageName}}"
+  github.com/beardfriend/ddalggak/internal:
+    config:
+      with-expecter: True
+      recursive: true
+      all: true
+      dir: "internal/mocks/{{.PackageName}}"

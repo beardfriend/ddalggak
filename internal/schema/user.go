@@ -21,9 +21,12 @@ func (User) Annotations() []schema.Annotation {
 
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("email").Unique(),
+		field.String("email").
+			Unique().
+			StructTag(`json:"email,omitempty" validate:"required,email"`),
 
-		field.String("password").Sensitive(),
+		field.String("password").
+			StructTag(`json:"password,omitempty" validate:"required"`),
 
 		field.String("nickname"),
 	}

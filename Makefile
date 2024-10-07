@@ -4,3 +4,5 @@ ent-init:
 ent-generate:
 	go run -mod=mod entgo.io/ent/cmd/ent generate --target ./ent ./internal/schema/ --feature sql/modifier --feature sql/execquery
 
+swag:
+	swag init -g ./internal/server/server.go

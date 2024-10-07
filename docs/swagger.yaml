@@ -1,0 +1,463 @@
+definitions:
+  common.Response:
+    properties:
+      message:
+        type: string
+    type: object
+  common.ResponseWithData:
+    properties:
+      message:
+        type: string
+      result: {}
+    type: object
+  common.ResponseWithPagination:
+    properties:
+      message:
+        type: string
+      pagination: {}
+      result: {}
+    type: object
+  ent.Product:
+    properties:
+      createdAt:
+        description: CreatedAt holds the value of the "createdAt" field.
+        type: string
+      edges:
+        allOf:
+        - $ref: '#/definitions/ent.ProductEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ProductQuery when eager-loading is set.
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+      price:
+        description: Price holds the value of the "price" field.
+        type: string
+      updatedAt:
+        description: UpdatedAt holds the value of the "updatedAt" field.
+        type: string
+      userID:
+        description: UserID holds the value of the "userID" field.
+        type: integer
+    type: object
+  ent.ProductEdges:
+    properties:
+      user:
+        allOf:
+        - $ref: '#/definitions/ent.User'
+        description: User holds the value of the user edge.
+    type: object
+  ent.User:
+    properties:
+      createdAt:
+        description: CreatedAt holds the value of the "createdAt" field.
+        type: string
+      edges:
+        allOf:
+        - $ref: '#/definitions/ent.UserEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the UserQuery when eager-loading is set.
+      email:
+        description: Email holds the value of the "email" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+      nickname:
+        description: Nickname holds the value of the "nickname" field.
+        type: string
+      updatedAt:
+        description: UpdatedAt holds the value of the "updatedAt" field.
+        type: string
+    type: object
+  ent.UserEdges:
+    properties:
+      products:
+        description: Products holds the value of the products edge.
+        items:
+          $ref: '#/definitions/ent.Product'
+        type: array
+    type: object
+  pagination.PaginationInfo:
+    properties:
+      pageCount:
+        type: integer
+      pageNo:
+        type: integer
+      pageSize:
+        type: integer
+      rowCount:
+        type: integer
+      total:
+        type: integer
+    type: object
+info:
+  contact:
+    email: beardfriend21@gmail.com
+    name: SEHUN PARK
+  description: DDALGGAK API
+  title: DDALGGAK API
+  version: "1.0"
+paths:
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Product List
+      parameters:
+      - in: query
+        name: isDesc
+        type: boolean
+      - in: query
+        name: orderFieldName
+        type: string
+      - in: query
+        name: pageNo
+        required: true
+        type: integer
+      - in: query
+        name: pageSize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseWithPagination'
+            - properties:
+                ' pagination':
+                  $ref: '#/definitions/pagination.PaginationInfo'
+                result:
+                  $ref: '#/definitions/ent.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Product List
+      tags:
+      - product
+    post:
+      consumes:
+      - application/json
+      description: Product Create
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Product'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Product Create
+      tags:
+      - product
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Product Delete
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Product Delete
+      tags:
+      - product
+    get:
+      consumes:
+      - application/json
+      description: Product Get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseWithData'
+            - properties:
+                result:
+                  $ref: '#/definitions/ent.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Product Get
+      tags:
+      - product
+    put:
+      consumes:
+      - application/json
+      description: Product Update
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Product'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseWithData'
+            - properties:
+                result:
+                  $ref: '#/definitions/ent.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Product Update
+      tags:
+      - product
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: User List
+      parameters:
+      - in: query
+        name: isDesc
+        type: boolean
+      - in: query
+        name: orderFieldName
+        type: string
+      - in: query
+        name: pageNo
+        required: true
+        type: integer
+      - in: query
+        name: pageSize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseWithPagination'
+            - properties:
+                ' pagination':
+                  $ref: '#/definitions/pagination.PaginationInfo'
+                result:
+                  $ref: '#/definitions/ent.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: User List
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: User Create
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ent.User'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: User Create
+      tags:
+      - user
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: User Delete
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: User Delete
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: User Get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseWithData'
+            - properties:
+                result:
+                  $ref: '#/definitions/ent.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: User Get
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: User Update
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ent.User'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseWithData'
+            - properties:
+                result:
+                  $ref: '#/definitions/ent.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: User Update
+      tags:
+      - user
+swagger: "2.0"

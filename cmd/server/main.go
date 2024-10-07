@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/beardfriend/ddalggak/internal/server"
+)
 
 func main() {
-	fmt.Println("hello world")
+	server.Run()
 }
