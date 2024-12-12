@@ -76,7 +76,7 @@ func (u *usecase) List(ctx context.Context, q *common.ListRequest) (result []*en
 		return
 	}
 
-	pg := pagination.NewPagination(q.PageSize, q.PageNo)
+	pg := pagination.NewPagination(q.PageNo, q.PageSize)
 	pg.SetTotal(total)
 
 	result, err = u.repo.List(ctx, &ListParams{
@@ -86,10 +86,6 @@ func (u *usecase) List(ctx context.Context, q *common.ListRequest) (result []*en
 		OrderIsDesc:    q.IsDesc,
 	})
 	if err != nil {
-		if ent.IsNotFound(err) {
-			err = common.NewUsecaseError(http.StatusNotFound, err, common.ErrNotfound)
-			return
-		}
 		err = common.NewUsecaseError(http.StatusInternalServerError, err, common.ErrDatabaseError)
 		return
 	}
@@ -131,7 +127,7 @@ func (u *usecase) ListByUserID(ctx context.Context, userID int, q *common.ListRe
 		return
 	}
 
-	pg := pagination.NewPagination(q.PageSize, q.PageNo)
+	pg := pagination.NewPagination(q.PageNo, q.PageSize)
 	pg.SetTotal(total)
 
 	result, err = u.repo.ListByUserID(ctx, userID, &ListParams{
@@ -141,10 +137,6 @@ func (u *usecase) ListByUserID(ctx context.Context, userID int, q *common.ListRe
 		OrderIsDesc:    q.IsDesc,
 	})
 	if err != nil {
-		if ent.IsNotFound(err) {
-			err = common.NewUsecaseError(http.StatusNotFound, err, common.ErrNotfound)
-			return
-		}
 		err = common.NewUsecaseError(http.StatusInternalServerError, err, common.ErrDatabaseError)
 		return
 	}

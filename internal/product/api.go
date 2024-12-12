@@ -3,21 +3,19 @@ package product
 import (
     "github.com/beardfriend/ddalggak/ent"
     _ "github.com/beardfriend/ddalggak/pkg/pagination"
-    "github.com/beardfriend/ddalggak/pkg/validatorx"
      "github.com/beardfriend/ddalggak/internal/common"
     "net/http"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"strconv"
 	
 )
 
 type API struct {
     usecase Usecase
-    validator validatorx.Validator  
 }
 
-func NewAPI(usecase Usecase, validator validatorx.Validator) *API {
-	return &API{usecase, validator}
+func NewAPI(usecase Usecase) *API {
+	return &API{usecase}
 }
 
 // Create godoc
@@ -32,14 +30,12 @@ func NewAPI(usecase Usecase, validator validatorx.Validator) *API {
 // @Failure      400  {object}	common.Response{}
 // @Failure      500  {object}	common.Response{}
 // @Router       /products [post]
-func (a *API) Create(c *fiber.Ctx) error {
+func (a *API) Create(c fiber.Ctx) error {
 	body := new(ent.Product)
-	if err := c.BodyParser(body); err != nil {
+	if err := c.Bind().Body(body); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
 	}
-	if err := a.validator.ValidateStruct(body); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
-	}
+	
 	err := a.usecase.Create(c.Context(), body)
 	if err != nil {
 		return common.ParseError(c, err)
@@ -59,7 +55,7 @@ func (a *API) Create(c *fiber.Ctx) error {
 // @Failure      400  {object}	common.Response{}
 // @Failure      500  {object}	common.Response{}
 // @Router       /products/{id} [get]
-func (a *API) Get(c *fiber.Ctx) error {
+func (a *API) Get(c fiber.Ctx) error {
 	id := c.Params("id")
 	idParsed, err := strconv.Atoi(id)
 	if err != nil {
@@ -89,12 +85,9 @@ func (a *API) Get(c *fiber.Ctx) error {
 // @Failure      404  {object}	common.Response{}
 // @Failure      500  {object}	common.Response{}
 // @Router       /products [get]
-func (a *API) List(c *fiber.Ctx) error {
+func (a *API) List(c fiber.Ctx) error {
     req := new(common.ListRequest)
-    if err := c.BodyParser(req); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
-	}
-	if err := a.validator.ValidateStruct(req); err != nil {
+    if err := c.Bind().Query(req); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
 	}
 
@@ -120,7 +113,7 @@ func (a *API) List(c *fiber.Ctx) error {
 // @Failure      400  {object}	common.Response{}
 // @Failure      500  {object}	common.Response{}
 // @Router       /products/{id} [delete]
-func (a *API) Delete(c *fiber.Ctx) error {
+func (a *API) Delete(c fiber.Ctx) error {
 	id := c.Params("id")
 	idParsed, err := strconv.Atoi(id)
 	if err != nil {
@@ -149,19 +142,17 @@ func (a *API) Delete(c *fiber.Ctx) error {
 // @Failure      400  {object}	common.Response{}
 // @Failure      500  {object}	common.Response{}
 // @Router       /products/{id} [put]
-func (a *API) Update(c *fiber.Ctx) error {
+func (a *API) Update(c fiber.Ctx) error {
 	id := c.Params("id")
 	idParsed, err := strconv.Atoi(id)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
 	}
 	body := new(ent.Product)
-	if err := c.BodyParser(body); err != nil {
+	if err := c.Bind().Body(body); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
 	}
-	if err := a.validator.ValidateStruct(body); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(common.Response{Message: "bad request"})
-	}
+	
 	body.ID = idParsed
 	err = a.usecase.Update(c.Context(), body)
 	if err != nil {

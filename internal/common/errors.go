@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UsecaseErr interface {
@@ -31,7 +31,7 @@ func NewUsecaseError(httpStatusCode int, before error, new error, isPushMessage 
 	return UsecaseError{HttpStatusCode: httpStatusCode, OriginError: before, UsecaseError: new, isPushMessage: pushMessage}
 }
 
-func ParseError(c *fiber.Ctx, err error) error {
+func ParseError(c fiber.Ctx, err error) error {
 	e, ok := err.(UsecaseError)
 	if ok {
 		if e.isPushMessage {
