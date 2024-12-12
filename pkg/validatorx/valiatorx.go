@@ -10,7 +10,7 @@ import (
 // ------------------- Validator -------------------
 
 type Validator interface {
-	ValidateStruct(request interface{}) []*ErrorResponse
+	Validate(out any) error
 }
 
 // ------------------- New -------------------
@@ -134,22 +134,10 @@ type ErrorResponse struct {
 	Value              string
 }
 
-func (v *validator) ValidateStruct(request interface{}) []*ErrorResponse {
-	var errors []*ErrorResponse
-
-	err := v.validator.Struct(request)
+func (v *validator) Validate(out any) error {
+	err := v.validator.Struct(out)
 	if err != nil {
-		for _, err := range err.(goValidator.ValidationErrors) {
-			var element ErrorResponse
-
-			ff := strings.Index(err.Namespace(), ".")
-
-			element.FailedFieldTagName = err.Field()
-			element.FailedField = err.Namespace()[ff+1:]
-			element.Tag = err.Tag()
-			element.Value = err.Param()
-			errors = append(errors, &element)
-		}
+		return err
 	}
-	return errors
+	return nil
 }

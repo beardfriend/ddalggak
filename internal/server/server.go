@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	_ "github.com/beardfriend/ddalggak/docs"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/favicon"
-	"github.com/gofiber/swagger"
+	"github.com/beardfriend/ddalggak/pkg/validatorx"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/favicon"
 )
 
 // @title DDALGGAK API
@@ -15,9 +15,13 @@ import (
 // @contact.name SEHUN PARK
 // @contact.email beardfriend21@gmail.com
 func Run() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		StructValidator: validatorx.NewValidatorx().
+			AddUrlValidation("url").
+			AddPhoneNumValidation("phoneNum").
+			Init(),
+	})
 	app.Use(favicon.New())
-	app.Get("/swagger/*", swagger.New(swagger.ConfigDefault))
 
 	if err := app.Listen(fmt.Sprintf(":%d", 4000)); err != nil {
 		panic(err)
